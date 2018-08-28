@@ -9,7 +9,7 @@
 ## Install
 
 ```sh
-$ curl -o ext-ticker.sh https://raw.githubusercontent.com/larsmaeder/ticker.sh/master/ext-ticker.sh
+$ curl -o ext-ticker.sh https://raw.githubusercontent.com/larsmaeder/ext-ticker.sh/master/ext-ticker.sh
 ```
 
 Make sure to install [jq](https://stedolan.github.io/jq/), a versatile command-line JSON processor.
