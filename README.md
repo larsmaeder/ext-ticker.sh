@@ -2,7 +2,7 @@
 
 > Extended real-time command-line stock ticker based on pstadler`s ticker.sh.
 
-`ext-ticker.sh` is a simple shell script using the Yahoo Finance API as a data source. It features colored output and is able to display pre- and post-market prices.
+`ext-ticker.sh` is a simple shell script using the Yahoo Finance API as a data source. It features colored output and is able to display the current price, pre- and post-market prices,  currency, difference to previous day in dez numbers and percentage and also 52-week-range.  
 
 ![ext-ticker.sh](https://raw.githubusercontent.com/larsmaeder/ext-ticker.sh/master/ext-ticker-sh.png)
 
