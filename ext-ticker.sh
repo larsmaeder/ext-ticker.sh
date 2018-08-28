@@ -5,6 +5,16 @@ LANG=en_US.UTF-8
 
 SYMBOLS=("$@")
 
+: "${COLOR_BOLD:=\e[1;37m}"
+: "${COLOR_GREEN:=\e[32m}"
+: "${COLOR_RED:=\e[31m}"
+: "${COLOR_RESET:=\e[00m}"
+: "${DIM:=\e[2m}"
+
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+printf "%-20s%-20s%-20s%-20s%-20s%s%s%s%s\n" "Symbol" "Price" "Currency" "Difference" "Diff. in %" "52-Week-Range" 
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+
 if ! $(type jq > /dev/null 2>&1); then
   echo "'jq' is not in the PATH. (See: https://stedolan.github.io/jq/)"
   exit 1
@@ -16,13 +26,8 @@ if [ -z "$SYMBOLS" ]; then
 fi
 
 FIELDS=(symbol marketState regularMarketPrice regularMarketChange regularMarketChangePercent \
-  preMarketPrice preMarketChange preMarketChangePercent postMarketPrice postMarketChange postMarketChangePercent)
-API_ENDPOINT="https://query1.finance.yahoo.com/v7/finance/quote?lang=en-US&region=US&corsDomain=finance.yahoo.com"
-
-: "${COLOR_BOLD:=\e[1;37m}"
-: "${COLOR_GREEN:=\e[32m}"
-: "${COLOR_RED:=\e[31m}"
-: "${COLOR_RESET:=\e[00m}"
+  preMarketPrice preMarketChange preMarketChangePercent postMarketPrice postMarketChange postMarketChangePercent currency fiftyTwoWeekRange)
+API_ENDPOINT="https://query1.finance.yahoo.com/v7/finance/quote?"
 
 symbols=$(IFS=,; echo "${SYMBOLS[*]}")
 fields=$(IFS=,; echo "${FIELDS[*]}")
@@ -47,6 +52,7 @@ for symbol in $(IFS=' '; echo "${SYMBOLS[*]}"); do
     price=$(query $symbol 'preMarketPrice')
     diff=$(query $symbol 'preMarketChange')
     percent=$(query $symbol 'preMarketChangePercent')
+    curr=$(query $symbol 'currency')
   elif [ $(query $symbol 'marketState') != "REGULAR" ] \
     && [ "$(query $symbol 'postMarketChange')" != "0" ] \
     && [ "$(query $symbol 'postMarketChange')" != "null" ]; then
@@ -54,11 +60,14 @@ for symbol in $(IFS=' '; echo "${SYMBOLS[*]}"); do
     price=$(query $symbol 'postMarketPrice')
     diff=$(query $symbol 'postMarketChange')
     percent=$(query $symbol 'postMarketChangePercent')
+    curr=$(query $symbol 'currency')
   else
     nonRegularMarketSign=''
     price=$(query $symbol 'regularMarketPrice')
     diff=$(query $symbol 'regularMarketChange')
     percent=$(query $symbol 'regularMarketChangePercent')
+    curr=$(query $symbol 'currency')
+    annualrange=$(query $symbol 'fiftyTwoWeekRange')
   fi
 
   if [ "$diff" == "0" ]; then
@@ -69,7 +78,13 @@ for symbol in $(IFS=' '; echo "${SYMBOLS[*]}"); do
     color=$COLOR_GREEN
   fi
 
-  printf "%-10s$COLOR_BOLD%8.2f$COLOR_RESET" $symbol $price
-  printf "$color%10.2f%12s$COLOR_RESET" $diff $(printf "(%.2f%%)" $percent)
-  printf " %s\n" "$nonRegularMarketSign"
+  printf "%-20s$COLOR_BOLD%-20.2f$COLOR_RESET" $symbol $price
+  printf "%-20s" $curr
+  printf "$color%-20.2f%-10s$COLOR_RESET" $diff $(printf "(%.2f%%)" $percent)
+  printf "$DIM%-10s$COLOR_RESET" "$nonRegularMarketSign"
+  printf "%s%s%s\n" $annualrange
+
 done
+
+  printf '%*s' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+  printf "$DIM\n%s\n$COLOR_RESET" "* Pre- or postmarket change"

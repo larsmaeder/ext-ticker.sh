@@ -1,15 +1,15 @@
-# ticker.sh
+# Extended ticker.sh
 
-> Real-time stock tickers from the command-line.
+> Extended real-time command-line stock ticker based on pstadler`s ticker.sh.
 
-`ticker.sh` is a simple shell script using the Yahoo Finance API as a data source. It features colored output and is able to display pre- and post-market prices.
+`ext-ticker.sh` is a simple shell script using the Yahoo Finance API as a data source. It features colored output and is able to display pre- and post-market prices.
 
-![ticker.sh](https://raw.githubusercontent.com/pstadler/ticker.sh/master/screenshot.png)
+![ext-ticker.sh](https://raw.githubusercontent.com/larsmaeder/ext-ticker.sh/master/ext-ticker-sh.png)
 
 ## Install
 
 ```sh
-$ curl -o ticker.sh https://raw.githubusercontent.com/pstadler/ticker.sh/master/ticker.sh
+$ curl -o ext-ticker.sh https://raw.githubusercontent.com/larsmaeder/ticker.sh/master/ext-ticker.sh
 ```
 
 Make sure to install [jq](https://stedolan.github.io/jq/), a versatile command-line JSON processor.
@@ -18,17 +18,17 @@ Make sure to install [jq](https://stedolan.github.io/jq/), a versatile command-l
 
 ```sh
 # Single symbol:
-$ ./ticker.sh AAPL
+$ ./ext-ticker.sh AAPL
 
 # Multiple symbols:
-$ ./ticker.sh AAPL MSFT GOOG BTC-USD
+$ ./ext-ticker.sh AAPL MSFT GOOG BTC-USD
 
 # Read from file:
-$ echo "AAPL MSFT GOOG BTC-USD" > ~/.ticker.conf
-$ ./ticker.sh $(cat ~/.ticker.conf)
+$ echo "AAPL MSFT GOOG BTC-USD" > ~/.ext-ticker.conf
+$ ./ext-ticker.sh $(cat ~/.ext-ticker.conf)
 
 # Update every five seconds:
-$ while true; do clear; ./ticker.sh AAPL MSFT GOOG BTC-USD; sleep 5; done
+$ while true; do clear; ./ext-ticker.sh AAPL MSFT GOOG BTC-USD; sleep 5; done
 ```
 
 This script works well with [GeekTool](https://www.tynsoe.org/v2/geektool/) and similar software:
@@ -37,5 +37,5 @@ This script works well with [GeekTool](https://www.tynsoe.org/v2/geektool/) and 
 # GeekTool example script:
 
 PATH=/usr/local/bin:$PATH # make sure to include the path where jq is located
-~/GitHub/ticker.sh/ticker.sh AAPL MSFT GOOG BTC-USD
+~/GitHub/ext-ticker.sh/ext-ticker.sh AAPL MSFT GOOG BTC-USD
 ```
